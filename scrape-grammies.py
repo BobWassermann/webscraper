@@ -1,7 +1,7 @@
 import csv, urllib2
 from bs4 import BeautifulSoup
 
-f = csv.writer(open('grammies.csv', 'w'))
+f = csv.writer(open('grammies.csv', 'w'), delimiter = ';')
 f.writerow(['Year', 'Category', 'Title', 'Winner'])
 
 for numb in range(1, 161):
