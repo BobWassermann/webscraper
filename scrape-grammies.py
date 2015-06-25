@@ -69,38 +69,59 @@ def song():
       soup = BeautifulSoup(html)
 
       # Song name
-      if soup.select('h1.firstHeading'):
-        for i in soup.select('h1.firstHeading'):
-          songNameArray.append(i.text)
-          print 'song: ', i.text
+      if urli != '/wiki/Rodney_Jerkins':
+        if soup.select('h1.firstHeading'):
+          for i in soup.select('h1.firstHeading'):
+            songNameArray.append(i.text)
+            print i.text
 
       # Songe genre
-      if urli == '/wiki/Exodus_(1960_film)':
-        songGenreArray.append('Jazz')
-      elif soup.find('th', text = 'Genre'):
-        if soup.find('th', text = 'Genre').findNext('td'):
-          concateGenre = ''
-          for i in soup.find('th', text = 'Genre').findNext('td'):
-            # concateGenre += ', ' + str(i)
-            # print concateGenre[1:]
-            print i.text
-            # songGenreArray.append(concateGenre[1:])
-      else:
-        print '-'
+        if (urli == '/wiki/Exodus_(1960_film)') or (urli == '/wiki/The_Shadow_of_Your_Smile'):
+          songGenreArray.append('Jazz')
+        elif soup.select('div#mw-content-text table.infobox'):
+          if soup.find('th', text = 'Genre'):
+            songGenreArray.append(soup.find('th', text = 'Genre').findNext('td').text)
+          else:
+            songGenreArray.append('-')
+        else:
+          songGenreArray.append('-')
 
+      # Length
+        if soup.select('div#mw-content-text table.infobox'):
+          for i in soup.select('div#mw-content-text table.infobox'):
+            if i.find('th', text = 'Length'):
+              songLengthArray.append(i.find('th', text = 'Length').findNext('td').text)
+              print i.find('th', text = 'Length').findNext('td').text
+            else:
+              songLengthArray.append('-')
+              print '-'
+            break
+        else:
+          songLengthArray.append('-')
 
+        # Label
+        if soup.select('div#mw-content-text table.infobox'):
+          for i in soup.select('div#mw-content-text table.infobox'):
+            if i.find('th', text = 'Label'):
+              songLabelArray.append(i.find('th', text = 'Label').findNext('td').text)
+            else:
+              songLabelArray.append('-')
+            break
+        else:
+          songLabelArray.append('-')
 
   print 'Done writing songs to CSV'
 
+print 'Started scrape, a truh mastah piece. Breh breh.'
 winningSong()
-# artist()
+artist()
 song()
 
-fa = csv.writer(open('artist.csv', 'w'), delimiter = ';')
-fa.writerow([td.encode('utf-8') for td in artistNameArray])
-fa.writerow([td.encode('utf-8') for td in artistBornArray])
-fs = csv.writer(open('songs.csv', 'w'), delimiter = ';')
+fs = csv.writer(open('masterscrape.csv', 'w'), delimiter = ';')
 fs.writerow([td.encode('utf-8') for td in artistNameArray])
+fs.writerow([td.encode('utf-8') for td in artistBornArray])
 fs.writerow([td.encode('utf-8') for td in songNameArray])
 fs.writerow([td.encode('utf-8') for td in songGenreArray])
+fs.writerow([td.encode('utf-8') for td in songLengthArray])
+fs.writerow([td.encode('utf-8') for td in songLabelArray])
 print 'Done running script, check your files'
